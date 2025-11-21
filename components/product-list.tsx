@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -50,9 +51,21 @@ export default function ProductList() {
 
       if (response.ok) {
         setProducts(products.filter((p) => p.id !== id));
+        toast.success("Produto deletado com sucesso!", {
+          duration: 3000,
+        });
+      } else {
+        toast.error("Falha ao deletar produto", {
+          description: "Tente novamente",
+          duration: 3000,
+        });
       }
     } catch (error) {
       console.error("Failed to delete product:", error);
+      toast.error("Erro ao deletar produto", {
+        description: "Ocorreu um erro inesperado",
+        duration: 3000,
+      });
     }
   };
 

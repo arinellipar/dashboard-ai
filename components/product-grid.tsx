@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Package, Sparkles, Zap } from "lucide-react";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -69,7 +70,10 @@ export default function ProductGrid({
     localStorage.setItem("cart", JSON.stringify(cart));
     onCartUpdate();
 
-    alert(`${product.name} added to cart!`);
+    toast.success(`${product.name} adicionado ao carrinho!`, {
+      description: `Quantidade: ${existingItem ? existingItem.quantity : 1}`,
+      duration: 3000,
+    });
   };
 
   const filteredProducts = products.filter((p) => {
@@ -181,9 +185,9 @@ export default function ProductGrid({
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ delay: index * 0.05 }}
               whileHover={{ y: -8 }}
-              className="group relative"
+              className="group relative h-full"
             >
-              <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all">
+              <div className="relative h-full flex flex-col backdrop-blur-xl bg-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all">
                 {/* Glow effect on hover */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -209,15 +213,15 @@ export default function ProductGrid({
                 </div>
 
                 {/* Content */}
-                <div className="p-6 relative z-10">
-                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors">
+                <div className="p-6 relative z-10 flex flex-col flex-1">
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors line-clamp-2 min-h-[3.5rem]">
                     {product.name}
                   </h3>
-                  <p className="text-blue-200/70 text-sm mb-4 line-clamp-2">
+                  <p className="text-blue-200/70 text-sm mb-4 line-clamp-2 min-h-[2.5rem]">
                     {product.description || "No description available"}
                   </p>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mt-auto">
                     <div>
                       <p className="text-2xl font-bold text-white">
                         ${product.price.toFixed(2)}

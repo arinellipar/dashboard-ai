@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { X, Minus, Plus, Trash2, ShoppingBag, CreditCard, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 interface CartItem {
   id: string;
@@ -25,6 +27,7 @@ export default function ShoppingCart({
   onClose,
   onCartUpdate,
 }: ShoppingCartProps) {
+  const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const loadCart = () => {
@@ -69,35 +72,17 @@ export default function ShoppingCart({
     0
   );
 
-  const handleCheckout = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const items = cartItems.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-      }));
-
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ items }),
+  const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      toast.error("Carrinho vazio", {
+        description: "Adicione produtos antes de finalizar",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert("Pedido realizado com sucesso!");
-        clearCart();
-        onClose();
-      } else {
-        alert(data.message || "Falha ao realizar pedido");
-      }
-    } catch {
-      alert("Ocorreu um erro. Por favor, tente novamente.");
+      return;
     }
+
+    // Redirecionar para página de checkout
+    onClose();
+    router.push("/checkout");
   };
 
   if (!isOpen) return null;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -43,6 +44,22 @@ export default function RootLayout({
         </div>
 
         {children}
+        <Toaster 
+          position="top-right"
+          expand={false}
+          richColors
+          closeButton
+          toastOptions={{
+            style: {
+              background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+              border: '2px solid rgba(147, 51, 234, 0.3)',
+              color: '#f1f5f9',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(147, 51, 234, 0.2)',
+            },
+            className: 'sonner-toast',
+          }}
+        />
       </body>
     </html>
   );
