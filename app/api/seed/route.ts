@@ -118,10 +118,11 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Seed error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return errorResponse(
       {
-        message: "Failed to seed database",
-        error: error instanceof Error ? error.message : "Unknown error",
+        message: `Failed to seed database: ${errorMessage}`,
       },
       500
     );
