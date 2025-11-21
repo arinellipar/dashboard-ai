@@ -7,6 +7,8 @@ import {
 } from "@/lib/api-response";
 import { getUserFromToken } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
