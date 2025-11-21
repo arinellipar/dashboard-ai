@@ -4,13 +4,22 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/protected-route";
 import AdminUserManagement from "@/components/admin-user-management";
-import { LogOut, Package, ShoppingCart, Users, Settings } from "lucide-react";
+import ChangePasswordModal from "@/components/change-password-modal";
+import {
+  LogOut,
+  Package,
+  ShoppingCart,
+  Users,
+  Settings,
+  Key,
+} from "lucide-react";
 
 function AdminContent() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   useEffect(() => {
     const checkAdmin = () => {
@@ -56,6 +65,13 @@ function AdminContent() {
             <p className="text-gray-600 mt-1">Welcome, {userName}!</p>
           </div>
           <div className="flex gap-3">
+            <button
+              onClick={() => setShowPasswordModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              <Key className="w-4 h-4" />
+              Change Password
+            </button>
             <button
               onClick={() => router.push("/home")}
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -148,6 +164,12 @@ function AdminContent() {
           </div>
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+      />
     </div>
   );
 }
