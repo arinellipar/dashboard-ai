@@ -74,7 +74,9 @@ export async function POST(request: NextRequest) {
 
     let total = 0;
     const orderItems = items.map((item) => {
-      const product = products.find((p) => p.id === item.productId);
+      const product = products.find(
+        (p: { id: string }) => p.id === item.productId
+      );
       if (!product) {
         throw new Error(`Product ${item.productId} not found`);
       }
