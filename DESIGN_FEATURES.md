@@ -1,4 +1,4 @@
-# 🚀 Design Futurista - TechStore
+# 🚀 Design Futurista - Arinelli'z
 
 ## ✨ Características do Novo Design
 

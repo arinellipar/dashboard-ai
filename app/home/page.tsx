@@ -100,7 +100,9 @@ function HomeContent() {
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">TechStore</h1>
+                <h1 className="text-xl font-bold text-white">
+                  Arinelli&apos;z
+                </h1>
                 {userName && (
                   <p className="text-xs text-blue-300">Welcome, {userName}</p>
                 )}

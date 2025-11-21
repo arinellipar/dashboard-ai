@@ -98,7 +98,9 @@ export default function Home() {
             >
               <Sparkles className="w-10 h-10 text-white" />
             </motion.div>
-            <h1 className="text-4xl font-bold text-white mb-2">TechStore</h1>
+            <h1 className="text-4xl font-bold text-white mb-2">
+              Arinelli&apos;z
+            </h1>
             <p className="text-blue-200">Next-gen e-commerce experience</p>
           </motion.div>
 

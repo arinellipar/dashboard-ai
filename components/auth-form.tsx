@@ -193,7 +193,7 @@ export default function AuthForm() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        {isLogin ? "New to TechStore?" : "Already have an account?"}{" "}
+        {isLogin ? "New to Arinelli&apos;z?" : "Already have an account?"}{" "}
         <button
           onClick={() => {
             setIsLogin(!isLogin);
