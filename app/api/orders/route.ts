@@ -7,6 +7,7 @@ import {
   handleApiError,
 } from "@/lib/api-response";
 import { getUserFromToken } from "@/lib/auth";
+import type { Prisma } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -92,32 +93,34 @@ export async function POST(request: NextRequest) {
     });
 
     // Create order and update stock
-    const order = await prisma.$transaction(async (tx) => {
-      const newOrder = await tx.order.create({
-        data: {
-          userId: user.id,
-          total,
-          orderItems: {
-            create: orderItems,
+    const order = await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const newOrder = await tx.order.create({
+          data: {
+            userId: user.id,
+            total,
+            orderItems: {
+              create: orderItems,
+            },
           },
-        },
-        include: {
-          orderItems: {
-            include: { product: true },
+          include: {
+            orderItems: {
+              include: { product: true },
+            },
           },
-        },
-      });
-
-      // Update product stock
-      for (const item of items) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: { stock: { decrement: item.quantity } },
         });
-      }
 
-      return newOrder;
-    });
+        // Update product stock
+        for (const item of items) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { decrement: item.quantity } },
+          });
+        }
+
+        return newOrder;
+      }
+    );
 
     return successResponse(order, 201);
   } catch (error) {
