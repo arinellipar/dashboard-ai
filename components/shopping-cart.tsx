@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { X, Minus, Plus, Trash2, ShoppingBag, CreditCard, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface CartItem {
   id: string;
@@ -86,127 +89,201 @@ export default function ShoppingCart({
       const data = await response.json();
 
       if (data.success) {
-        alert("Order placed successfully!");
+        alert("Pedido realizado com sucesso!");
         clearCart();
         onClose();
       } else {
-        alert(data.message || "Failed to place order");
+        alert(data.message || "Falha ao realizar pedido");
       }
     } catch {
-      alert("An error occurred. Please try again.");
+      alert("Ocorreu um erro. Por favor, tente novamente.");
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <>
+    <AnimatePresence>
       {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+      <motion.div
+        key="cart-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40"
         onClick={onClose}
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+      <motion.div
+        key="cart-sidebar"
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="fixed right-0 top-0 h-full w-full max-w-md bg-gradient-to-br from-slate-900 to-slate-800 border-l-2 border-purple-500/30 shadow-2xl z-50 flex flex-col"
+      >
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b">
-          <div className="flex items-center gap-2">
-            <ShoppingBag className="w-6 h-6 text-blue-600" />
-            <h2 className="text-xl font-bold">Shopping Cart</h2>
+        <div className="relative flex justify-between items-center p-6 border-b border-slate-700/50 bg-slate-900/50 backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <ShoppingBag className="w-7 h-7 text-purple-500" />
+              <Sparkles className="w-3 h-3 text-purple-400 absolute -top-1 -right-1 animate-pulse" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                Carrinho
+              </h2>
+              <p className="text-xs text-slate-400">{cartItems.length} {cartItems.length === 1 ? 'item' : 'itens'}</p>
+            </div>
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="hover:bg-slate-800 text-slate-400 hover:text-slate-100"
           >
             <X className="w-6 h-6" />
-          </button>
+          </Button>
         </div>
 
         {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {cartItems.length === 0 ? (
-            <div className="text-center py-12">
-              <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">Your cart is empty</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {cartItems.map((item) => (
-                <div
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <AnimatePresence mode="popLayout">
+            {cartItems.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="text-center py-12"
+              >
+                <div className="relative inline-block mb-4">
+                  <ShoppingBag className="w-20 h-20 text-slate-600 mx-auto" />
+                  <div className="absolute inset-0 bg-purple-600/20 blur-2xl" />
+                </div>
+                <p className="text-slate-400 text-lg">Seu carrinho está vazio</p>
+                <p className="text-slate-500 text-sm mt-2">Adicione produtos incríveis!</p>
+              </motion.div>
+            ) : (
+              cartItems.map((item, index) => (
+                <motion.div
                   key={item.id}
-                  className="flex gap-4 bg-gray-50 p-4 rounded-lg"
+                  layout
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="group relative"
                 >
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    {item.imageUrl ? (
-                      <img
-                        src={item.imageUrl}
-                        alt={item.name}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                    ) : (
-                      <ShoppingBag className="w-8 h-8 text-gray-400" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-blue-600 font-bold mb-2">
-                      ${item.price.toFixed(2)}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => updateQuantity(item.id, -1)}
-                        className="p-1 bg-white rounded hover:bg-gray-200 transition-colors"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-8 text-center font-semibold">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, 1)}
-                        className="p-1 bg-white rounded hover:bg-gray-200 transition-colors"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="ml-auto p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                  <div className="flex gap-4 glass p-4 rounded-xl border border-slate-700/50 hover:border-purple-500/50 transition-all neon-glow-hover">
+                    {/* Animated gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                    <div className="relative w-20 h-20 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ShoppingBag className="w-8 h-8 text-slate-400" />
+                      )}
+                    </div>
+
+                    <div className="flex-1 relative z-10">
+                      <h3 className="font-semibold text-slate-100 mb-1">
+                        {item.name}
+                      </h3>
+                      <p className="text-green-400 font-bold mb-3">
+                        ${item.price.toFixed(2)}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateQuantity(item.id, -1)}
+                          className="h-8 w-8 bg-slate-800 hover:bg-slate-700 border-slate-600"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </Button>
+                        <span className="w-10 text-center font-bold text-slate-100">
+                          {item.quantity}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateQuantity(item.id, 1)}
+                          className="h-8 w-8 bg-slate-800 hover:bg-slate-700 border-slate-600"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeItem(item.id)}
+                          className="ml-auto h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-600/20"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                </motion.div>
+              ))
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Footer */}
         {cartItems.length > 0 && (
-          <div className="border-t p-6 space-y-4">
-            <div className="flex justify-between items-center text-lg font-bold">
-              <span>Total:</span>
-              <span className="text-blue-600">${total.toFixed(2)}</span>
+          <motion.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            className="border-t border-slate-700/50 p-6 space-y-4 bg-slate-900/50 backdrop-blur-sm"
+          >
+            <Separator className="mb-4" />
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-slate-400">
+                <span>Subtotal:</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center text-slate-400">
+                <span>Frete:</span>
+                <span className="text-green-400">Grátis</span>
+              </div>
             </div>
-            <button
+
+            <Separator />
+
+            <div className="flex justify-between items-center text-xl font-bold">
+              <span className="text-slate-100">Total:</span>
+              <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                ${total.toFixed(2)}
+              </span>
+            </div>
+
+            <Button
               onClick={handleCheckout}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              className="w-full h-12 text-lg font-semibold group relative overflow-hidden"
+              size="lg"
             >
-              Checkout
-            </button>
-            <button
+              <CreditCard className="w-5 h-5 mr-2" />
+              Finalizar Compra
+            </Button>
+
+            <Button
               onClick={clearCart}
-              className="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+              variant="outline"
+              className="w-full border-slate-700 hover:bg-red-600/20 hover:border-red-500/50 hover:text-red-300"
             >
-              Clear Cart
-            </button>
-          </div>
+              <Trash2 className="w-4 h-4 mr-2" />
+              Limpar Carrinho
+            </Button>
+          </motion.div>
         )}
-      </div>
-    </>
+      </motion.div>
+    </AnimatePresence>
   );
 }

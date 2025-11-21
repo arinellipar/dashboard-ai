@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 15 23 42; /* slate-900 */
+  --foreground: 241 245 249; /* slate-100 */
+  --primary: 147 51 234; /* purple-600 */
+  --primary-foreground: 255 255 255;
+  --secondary: 59 130 246; /* blue-600 */
+  --secondary-foreground: 255 255 255;
+  --accent: 139 92 246; /* purple-500 */
+  --accent-foreground: 255 255 255;
+  --destructive: 220 38 38; /* red-600 */
+  --destructive-foreground: 255 255 255;
+  --muted: 51 65 85; /* slate-700 */
+  --muted-foreground: 148 163 184; /* slate-400 */
+  --card: 30 41 59; /* slate-800 */
+  --card-foreground: 241 245 249; /* slate-100 */
+  --popover: 30 41 59; /* slate-800 */
+  --popover-foreground: 241 245 249; /* slate-100 */
+  --border: 51 65 85; /* slate-700 */
+  --input: 51 65 85; /* slate-700 */
+  --ring: 147 51 234; /* purple-600 */
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-orbitron);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: rgb(var(--border));
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-background text-foreground;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-purple-600 to-blue-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply from-purple-700 to-blue-700;
+}
+
+/* Custom Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    rgba(147, 51, 234, 0) 0%,
+    rgba(147, 51, 234, 0.5) 50%,
+    rgba(147, 51, 234, 0) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Glassmorphism Effect */
+.glass {
+  @apply bg-slate-800/30 backdrop-blur-lg border border-slate-700/50;
+}
+
+/* Neon Glow Effect */
+.neon-glow {
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.5),
+              0 0 20px rgba(147, 51, 234, 0.3),
+              0 0 30px rgba(147, 51, 234, 0.1);
+}
+
+.neon-glow-hover:hover {
+  box-shadow: 0 0 15px rgba(147, 51, 234, 0.7),
+              0 0 30px rgba(147, 51, 234, 0.5),
+              0 0 45px rgba(147, 51, 234, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Cyber Text Glow */
+.cyber-text-glow {
+  text-shadow:
+    0 0 10px rgba(0, 245, 255, 0.8),
+    0 0 20px rgba(0, 245, 255, 0.6),
+    0 0 30px rgba(0, 245, 255, 0.4),
+    0 0 40px rgba(255, 0, 255, 0.3);
+}
+
+/* Holographic Effect */
+@keyframes holographic {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.holographic {
+  animation: holographic 6s linear infinite;
 }

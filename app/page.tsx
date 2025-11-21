@@ -1,65 +1,33 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, ShoppingBag, TrendingUp, Zap } from "lucide-react";
+import { Shield, ShoppingBag, TrendingUp, Zap, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AuthForm from "@/components/auth-form";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
-      {/* Animated background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px]" />
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Background effects are in layout.tsx */}
 
-      {/* Animated orbs */}
-      <motion.div
-        className="absolute top-20 left-20 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
-        animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.5, 0.3, 0.5],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
 
       {/* Admin Panel Button */}
-      <motion.button
-        onClick={() => router.push("/admin/login")}
-        className="fixed top-6 right-6 z-50 group"
+      <motion.div
+        className="fixed top-6 right-6 z-50"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
       >
-        <div className="relative flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-lg shadow-purple-500/50 overflow-hidden">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600"
-            initial={{ x: "100%" }}
-            whileHover={{ x: 0 }}
-            transition={{ duration: 0.3 }}
-          />
-          <Shield className="w-5 h-5 text-white relative z-10" />
-          <span className="text-white font-semibold relative z-10">
-            Admin Panel
-          </span>
+        <Button
+          onClick={() => router.push("/admin/login")}
+          className="relative flex items-center gap-2 px-6 py-6 text-base shadow-2xl neon-glow group overflow-hidden"
+          size="lg"
+        >
+          <Shield className="w-5 h-5 relative z-10" />
+          <span className="relative z-10">Painel Admin</span>
           <motion.div
             className="absolute -top-1 -right-1 w-3 h-3"
             animate={{
@@ -71,10 +39,10 @@ export default function Home() {
               repeat: Infinity,
             }}
           >
-            <span className="absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75" />
           </motion.div>
-        </div>
-      </motion.button>
+        </Button>
+      </motion.div>
 
       {/* Main content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
@@ -148,10 +116,27 @@ export default function Home() {
                 <Zap className="w-3 h-3 text-white" />
               </motion.div>
             </motion.div>
-            <h1 className="text-4xl font-bold text-white mb-2">
-              Arinelli&apos;z
-            </h1>
-            <p className="text-blue-200">Next-gen e-commerce experience</p>
+            <motion.h1
+              className="text-5xl font-bold mb-2"
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              style={{
+                background: "linear-gradient(90deg, #a855f7, #3b82f6, #10b981, #3b82f6, #a855f7)",
+                backgroundSize: "200% 200%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Arinelli&apos;z Shop
+            </motion.h1>
+            <p className="text-slate-400 text-lg">Experiência e-commerce futurista 2026</p>
           </motion.div>
 
           {/* Auth Form */}
@@ -159,12 +144,16 @@ export default function Home() {
 
           {/* Footer */}
           <motion.div
-            className="mt-8 text-center text-sm text-blue-300"
+            className="mt-8 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <p>Powered by cutting-edge technology</p>
+            <div className="flex items-center justify-center gap-2 text-sm text-slate-400">
+              <Sparkles className="w-4 h-4 text-purple-500 animate-pulse" />
+              <p>Tecnologia de ponta • Design futurista • UX 2026</p>
+              <Sparkles className="w-4 h-4 text-blue-500 animate-pulse" />
+            </div>
           </motion.div>
         </motion.div>
       </div>

@@ -68,26 +68,12 @@ function HomeContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
-      {/* Animated background */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
-
-      {/* Animated orbs */}
-      <motion.div
-        className="fixed top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.2, 0.3, 0.2],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-        }}
-      />
+    <div className="min-h-screen">
+      {/* Background effects are in layout.tsx */}
 
       {/* Header */}
       <motion.header
-        className="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-white/10"
+        className="sticky top-0 z-40 glass border-b-2 border-slate-700/50 shadow-xl"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
@@ -99,12 +85,12 @@ function HomeContent() {
               whileHover={{ scale: 1.05 }}
             >
               <motion.div
-                className="relative w-10 h-10 bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center"
+                className="relative w-12 h-12 bg-gradient-to-br from-purple-600 via-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg neon-glow"
                 animate={{
                   boxShadow: [
-                    "0 4px 15px rgba(16, 185, 129, 0.3)",
-                    "0 4px 20px rgba(59, 130, 246, 0.4)",
-                    "0 4px 15px rgba(16, 185, 129, 0.3)",
+                    "0 4px 20px rgba(147, 51, 234, 0.5)",
+                    "0 4px 30px rgba(59, 130, 246, 0.6)",
+                    "0 4px 20px rgba(147, 51, 234, 0.5)",
                   ],
                 }}
                 transition={{
@@ -112,26 +98,30 @@ function HomeContent() {
                   repeat: Infinity,
                 }}
               >
-                <ShoppingBag className="w-6 h-6 text-white" />
+                <ShoppingBag className="w-7 h-7 text-white" />
                 <motion.div
-                  className="absolute -top-0.5 -right-0.5 bg-green-400 rounded-full p-0.5"
+                  className="absolute -top-1 -right-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full p-0.5"
                   animate={{
-                    scale: [1, 1.2, 1],
+                    scale: [1, 1.3, 1],
+                    rotate: [0, 10, 0],
                   }}
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
                   }}
                 >
-                  <TrendingUp className="w-2 h-2 text-white" />
+                  <TrendingUp className="w-3 h-3 text-white" />
                 </motion.div>
               </motion.div>
               <div>
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                   Arinelli&apos;z
                 </h1>
                 {userName && (
-                  <p className="text-xs text-blue-300">Welcome, {userName}</p>
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-purple-400" />
+                    Olá, {userName}
+                  </p>
                 )}
               </div>
             </motion.div>
@@ -139,18 +129,18 @@ function HomeContent() {
             <div className="flex gap-3 items-center">
               <motion.button
                 onClick={() => setCartOpen(true)}
-                className="relative p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/10"
+                className="relative p-3 glass border-2 border-slate-700/50 hover:border-purple-500/50 rounded-xl transition-all neon-glow-hover"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <CartIcon className="w-5 h-5 text-white" />
+                <CartIcon className="w-6 h-6 text-slate-100" />
                 <AnimatePresence>
                   {cartItems > 0 && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="absolute -top-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold"
+                      className="absolute -top-1 -right-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-lg neon-glow"
                     >
                       {cartItems}
                     </motion.span>
@@ -160,30 +150,24 @@ function HomeContent() {
 
               <motion.button
                 onClick={handleAdminClick}
-                className="relative flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg shadow-purple-500/50 overflow-hidden group"
+                className="relative flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl shadow-lg neon-glow overflow-hidden group"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600"
-                  initial={{ x: "100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <Shield className="w-4 h-4 text-white relative z-10" />
-                <span className="text-white font-semibold text-sm relative z-10">
+                <Shield className="w-5 h-5 text-white relative z-10" />
+                <span className="text-white font-semibold relative z-10">
                   Admin
                 </span>
               </motion.button>
 
               <motion.button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl transition-colors border border-red-500/30"
+                className="flex items-center gap-2 px-5 py-3 glass border-2 border-red-500/30 hover:border-red-500/50 hover:bg-red-600/20 text-red-300 rounded-xl transition-all"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <LogOut className="w-4 h-4" />
-                <span className="font-semibold text-sm">Logout</span>
+                <LogOut className="w-5 h-5" />
+                <span className="font-semibold">Sair</span>
               </motion.button>
             </div>
           </div>
@@ -200,23 +184,129 @@ function HomeContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <motion.h2
-              className="text-5xl font-bold text-white mb-4"
+              className="text-7xl md:text-8xl font-black mb-6 tracking-tight font-[family-name:var(--font-orbitron)]"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Discover the{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                Future
-              </span>
+              <motion.span
+                className="relative inline-block"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                style={{
+                  background: "linear-gradient(110deg, #00f5ff 0%, #ff00ff 25%, #00ff88 50%, #ff0099 75%, #00f5ff 100%)",
+                  backgroundSize: "200% 200%",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  textShadow: "0 0 80px rgba(0, 245, 255, 0.5)",
+                }}
+              >
+                DESCUBRA
+                {/* Glow effect layers */}
+                <motion.span
+                  className="absolute inset-0 blur-3xl opacity-70 -z-10"
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{
+                    background: "linear-gradient(110deg, #00f5ff 0%, #ff00ff 25%, #00ff88 50%, #ff0099 75%, #00f5ff 100%)",
+                    backgroundSize: "200% 200%",
+                    filter: "blur(40px)",
+                  }}
+                  aria-hidden="true"
+                />
+              </motion.span>
+              <br />
+              <motion.span
+                className="relative inline-block"
+                animate={{
+                  backgroundPosition: ["100% 50%", "0% 50%", "100% 50%"],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                style={{
+                  background: "linear-gradient(110deg, #ff00ff 0%, #00f5ff 25%, #ff0099 50%, #00ff88 75%, #ff00ff 100%)",
+                  backgroundSize: "200% 200%",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                O FUTURO
+                {/* Glow effect */}
+                <motion.span
+                  className="absolute inset-0 blur-3xl opacity-70 -z-10"
+                  animate={{
+                    backgroundPosition: ["100% 50%", "0% 50%", "100% 50%"],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{
+                    background: "linear-gradient(110deg, #ff00ff 0%, #00f5ff 25%, #ff0099 50%, #00ff88 75%, #ff00ff 100%)",
+                    backgroundSize: "200% 200%",
+                    filter: "blur(40px)",
+                  }}
+                  aria-hidden="true"
+                />
+              </motion.span>
             </motion.h2>
             <motion.p
-              className="text-xl text-blue-200 mb-8"
+              className="text-2xl text-cyan-300/90 mb-8 flex items-center justify-center gap-3 font-medium tracking-wide"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
+              style={{
+                textShadow: "0 0 20px rgba(0, 245, 255, 0.3)",
+              }}
             >
-              Next-generation tech products at your fingertips
+              <motion.span
+                animate={{
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.3, 1]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 2
+                }}
+              >
+                <Sparkles className="w-6 h-6 text-cyan-400" style={{ filter: "drop-shadow(0 0 8px rgba(0, 245, 255, 0.8))" }} />
+              </motion.span>
+              <span className="uppercase text-lg font-semibold tracking-widest">
+                Tecnologia de Ponta • Design Futurista • 2026
+              </span>
+              <motion.span
+                animate={{
+                  rotate: [0, -10, 10, 0],
+                  scale: [1, 1.3, 1]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                  delay: 1
+                }}
+              >
+                <Sparkles className="w-6 h-6 text-pink-400" style={{ filter: "drop-shadow(0 0 8px rgba(255, 0, 255, 0.8))" }} />
+              </motion.span>
             </motion.p>
           </div>
         </div>
@@ -238,15 +328,15 @@ function HomeContent() {
               }}
               transition={{ duration: 0.2 }}
             >
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 group-focus-within:text-blue-400 transition-colors z-10" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-purple-400 transition-colors z-10" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
-                placeholder="Search for products..."
-                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                placeholder="Buscar produtos incríveis..."
+                className="w-full pl-12 pr-4 py-5 glass border-2 border-slate-700/50 rounded-2xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all"
               />
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl -z-10"
