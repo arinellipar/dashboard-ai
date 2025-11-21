@@ -13,6 +13,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
+    "prisma:db:push": "prisma db push",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma db push && prisma generate && next build",
     "docker:build": "docker build -t ecommerce-dashboard .",
     "docker:run": "docker run -p 3000:3000 ecommerce-dashboard"
   },
