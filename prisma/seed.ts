@@ -6,19 +6,37 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Starting database seed...");
 
-  // Create admin user
-  const adminPassword = await hashPassword("admin123");
-  const admin = await prisma.user.upsert({
+  // Create primary admin user from environment variables
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+  const adminName = process.env.ADMIN_NAME || "Admin User";
+
+  const primaryAdminPassword = await hashPassword(adminPassword);
+  const primaryAdmin = await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: {
+      email: adminEmail,
+      password: primaryAdminPassword,
+      name: adminName,
+      role: "ADMIN",
+    },
+  });
+  console.log("Created primary admin user:", primaryAdmin.email);
+
+  // Create demo admin user
+  const demoAdminPassword = await hashPassword("admin123");
+  const demoAdmin = await prisma.user.upsert({
     where: { email: "admin@example.com" },
     update: {},
     create: {
       email: "admin@example.com",
-      password: adminPassword,
-      name: "Admin User",
+      password: demoAdminPassword,
+      name: "Demo Admin",
       role: "ADMIN",
     },
   });
-  console.log("Created admin user:", admin.email);
+  console.log("Created demo admin user:", demoAdmin.email);
 
   // Create regular user
   const userPassword = await hashPassword("user123");
