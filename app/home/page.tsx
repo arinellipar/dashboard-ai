@@ -11,6 +11,8 @@ import {
   Shield,
   ShoppingCart as CartIcon,
   Search,
+  ShoppingBag,
+  TrendingUp,
   Sparkles,
 } from "lucide-react";
 
@@ -96,9 +98,34 @@ function HomeContent() {
               className="flex items-center gap-3"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
+              <motion.div
+                className="relative w-10 h-10 bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center"
+                animate={{
+                  boxShadow: [
+                    "0 4px 15px rgba(16, 185, 129, 0.3)",
+                    "0 4px 20px rgba(59, 130, 246, 0.4)",
+                    "0 4px 15px rgba(16, 185, 129, 0.3)",
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                }}
+              >
+                <ShoppingBag className="w-6 h-6 text-white" />
+                <motion.div
+                  className="absolute -top-0.5 -right-0.5 bg-green-400 rounded-full p-0.5"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                  }}
+                >
+                  <TrendingUp className="w-2 h-2 text-white" />
+                </motion.div>
+              </motion.div>
               <div>
                 <h1 className="text-xl font-bold text-white">
                   Arinelli&apos;z

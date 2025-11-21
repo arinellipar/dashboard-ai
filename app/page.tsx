@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Sparkles } from "lucide-react";
+import { Shield, ShoppingBag, TrendingUp, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AuthForm from "@/components/auth-form";
 
@@ -92,11 +92,61 @@ export default function Home() {
             transition={{ delay: 0.2 }}
           >
             <motion.div
-              className="inline-flex items-center justify-center w-20 h-20 mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg shadow-blue-500/50"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
+              className="relative inline-flex items-center justify-center w-20 h-20 mb-4 bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 rounded-2xl shadow-lg shadow-emerald-500/50"
+              animate={{
+                boxShadow: [
+                  "0 10px 30px rgba(16, 185, 129, 0.3)",
+                  "0 10px 40px rgba(59, 130, 246, 0.5)",
+                  "0 10px 30px rgba(16, 185, 129, 0.3)",
+                ],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             >
-              <Sparkles className="w-10 h-10 text-white" />
+              <motion.div
+                animate={{
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <ShoppingBag className="w-10 h-10 text-white" />
+              </motion.div>
+              {/* Trending indicator */}
+              <motion.div
+                className="absolute -top-1 -right-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full p-1"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 10, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                }}
+              >
+                <TrendingUp className="w-4 h-4 text-white" />
+              </motion.div>
+              {/* Zap indicator */}
+              <motion.div
+                className="absolute -bottom-1 -left-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-1"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [1, 0.7, 1],
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                }}
+              >
+                <Zap className="w-3 h-3 text-white" />
+              </motion.div>
             </motion.div>
             <h1 className="text-4xl font-bold text-white mb-2">
               Arinelli&apos;z
@@ -118,27 +168,6 @@ export default function Home() {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Floating particles */}
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-blue-400 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
     </div>
   );
 }
