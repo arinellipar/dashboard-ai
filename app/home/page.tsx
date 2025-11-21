@@ -2,10 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ProtectedRoute from "@/components/protected-route";
 import ProductGrid from "@/components/product-grid";
 import ShoppingCart from "@/components/shopping-cart";
-import { LogOut, Shield, ShoppingCart as CartIcon } from "lucide-react";
+import {
+  LogOut,
+  Shield,
+  ShoppingCart as CartIcon,
+  Search,
+  Sparkles,
+} from "lucide-react";
 
 function HomeContent() {
   const router = useRouter();
@@ -14,6 +21,7 @@ function HomeContent() {
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
 
   useEffect(() => {
     const loadUser = () => {
@@ -26,7 +34,6 @@ function HomeContent() {
     };
     loadUser();
 
-    // Load cart count
     const cart = localStorage.getItem("cart");
     if (cart) {
       const cartData = JSON.parse(cart);
@@ -59,102 +66,176 @@ function HomeContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+      {/* Animated background */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+
+      {/* Animated orbs */}
+      <motion.div
+        className="fixed top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.3, 0.2],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+        }}
+      />
+
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <motion.header
+        className="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-white/10"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Arinelli'z</h1>
-              {userName && (
-                <p className="text-sm text-gray-600">Welcome, {userName}!</p>
-              )}
-            </div>
-            <div className="flex gap-3 items-center">
-              <button
-                onClick={() => setCartOpen(true)}
-                className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                <CartIcon className="w-6 h-6" />
-                {cartItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartItems}
-                  </span>
+            <motion.div
+              className="flex items-center gap-3"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white">TechStore</h1>
+                {userName && (
+                  <p className="text-xs text-blue-300">Welcome, {userName}</p>
                 )}
-              </button>
-              <button
-                onClick={handleAdminClick}
-                className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg animate-pulse"
+              </div>
+            </motion.div>
+
+            <div className="flex gap-3 items-center">
+              <motion.button
+                onClick={() => setCartOpen(true)}
+                className="relative p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/10"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Shield className="w-4 h-4" />
-                Admin
-                <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+                <CartIcon className="w-5 h-5 text-white" />
+                <AnimatePresence>
+                  {cartItems > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="absolute -top-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold"
+                    >
+                      {cartItems}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+
+              <motion.button
+                onClick={handleAdminClick}
+                className="relative flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg shadow-purple-500/50 overflow-hidden group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600"
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <Shield className="w-4 h-4 text-white relative z-10" />
+                <span className="text-white font-semibold text-sm relative z-10">
+                  Admin
                 </span>
-              </button>
-              <button
+              </motion.button>
+
+              <motion.button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl transition-colors border border-red-500/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <LogOut className="w-4 h-4" />
-                Logout
-              </button>
+                <span className="font-semibold text-sm">Logout</span>
+              </motion.button>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <motion.div
+        className="relative overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4">
-              Welcome to Arinelli&apos;z Store
-            </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Discover the latest tech products this christmas !
-            </p>
+            <motion.h2
+              className="text-5xl font-bold text-white mb-4"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Discover the{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+                Future
+              </span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-blue-200 mb-8"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              Next-generation tech products at your fingertips
+            </motion.p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Search Bar Section */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Search Bar */}
+      <motion.div
+        className="relative z-10"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
           <div className="max-w-2xl mx-auto">
-            <div className="relative">
+            <motion.div
+              className="relative group"
+              animate={{
+                scale: searchFocused ? 1.02 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 group-focus-within:text-blue-400 transition-colors z-10" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products by name..."
-                className="w-full px-6 py-4 pr-12 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                placeholder="Search for products..."
+                className="w-full pl-12 pr-4 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
               />
-              <svg
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl -z-10"
+                animate={{
+                  opacity: searchFocused ? 1 : 0,
+                }}
+              />
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Products Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <ProductGrid onCartUpdate={updateCartCount} searchQuery={searchQuery} />
       </div>
 
-      {/* Shopping Cart Sidebar */}
+      {/* Shopping Cart */}
       <ShoppingCart
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}

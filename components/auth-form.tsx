@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
@@ -48,95 +51,159 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="w-full max-w-md">
-      <div className="bg-white rounded-lg shadow-xl p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {isLogin ? "Welcome Back" : "Create Account"}
-        </h1>
-        <p className="text-gray-600 mb-8">
-          {isLogin
-            ? "Sign in to access your dashboard"
-            : "Register to get started"}
-        </p>
+    <motion.div
+      className="relative backdrop-blur-xl bg-white/10 rounded-3xl p-8 shadow-2xl border border-white/20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+    >
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-xl -z-10" />
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {!isLogin && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required={!isLogin}
-              />
-            </div>
+      {/* Toggle buttons */}
+      <div className="flex gap-2 mb-6 p-1 bg-white/5 rounded-2xl">
+        <button
+          type="button"
+          onClick={() => {
+            setIsLogin(true);
+            setError("");
+          }}
+          className={cn(
+            "flex-1 py-3 rounded-xl font-semibold transition-all duration-300",
+            isLogin
+              ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+              : "text-blue-200 hover:text-white"
           )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-              minLength={6}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            {loading ? "Please wait..." : isLogin ? "Sign In" : "Sign Up"}
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setError("");
-            }}
-            className="text-sm text-blue-600 hover:text-blue-700"
-          >
-            {isLogin
-              ? "Don't have an account? Sign up"
-              : "Already have an account? Sign in"}
-          </button>
-        </div>
+        >
+          Sign In
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setIsLogin(false);
+            setError("");
+          }}
+          className={cn(
+            "flex-1 py-3 rounded-xl font-semibold transition-all duration-300",
+            !isLogin
+              ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+              : "text-blue-200 hover:text-white"
+          )}
+        >
+          Sign Up
+        </button>
       </div>
-    </div>
+
+      <AnimatePresence mode="wait">
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-sm backdrop-blur-sm"
+          >
+            {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <AnimatePresence mode="wait">
+          {!isLogin && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 group-focus-within:text-blue-400 transition-colors" />
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all backdrop-blur-sm"
+                  placeholder="Full Name"
+                  required={!isLogin}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="relative group">
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 group-focus-within:text-blue-400 transition-colors" />
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all backdrop-blur-sm"
+            placeholder="Email Address"
+            required
+          />
+        </div>
+
+        <div className="relative group">
+          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 group-focus-within:text-blue-400 transition-colors" />
+          <input
+            type="password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all backdrop-blur-sm"
+            placeholder="Password"
+            required
+            minLength={6}
+          />
+        </div>
+
+        <motion.button
+          type="submit"
+          disabled={loading}
+          className="relative w-full group overflow-hidden"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="relative flex items-center justify-center gap-2 py-4 text-white font-semibold">
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Processing...</span>
+              </>
+            ) : (
+              <>
+                <span>{isLogin ? "Sign In" : "Create Account"}</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
+          </div>
+        </motion.button>
+      </form>
+
+      <motion.div
+        className="mt-6 text-center text-sm text-blue-200"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        {isLogin ? "New to TechStore?" : "Already have an account?"}{" "}
+        <button
+          onClick={() => {
+            setIsLogin(!isLogin);
+            setError("");
+          }}
+          className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+        >
+          {isLogin ? "Create an account" : "Sign in"}
+        </button>
+      </motion.div>
+    </motion.div>
   );
 }
